@@ -17,5 +17,14 @@ router.post('/classes/add', async (req, res) => {
     }
 })
 
+router.get('/classes', auth, async (req, res) => {
+    try {
+        const classes = await Class.find({})
+        res.send(classes)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
 
 module.exports = router
