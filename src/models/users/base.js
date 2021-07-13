@@ -100,6 +100,6 @@ baseSchema.pre('save', async function (next) {
 })
 
 
-const Base = mongoose.model('Base', baseSchema)
+const Base = mongoose.model('User', baseSchema)
 
 module.exports = mongoose.model('User');
