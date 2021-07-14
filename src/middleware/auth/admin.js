@@ -7,10 +7,10 @@ const auth = async (req, res, next) => {
         const token = req.header('Authorization').replace('Bearer ', '')
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token }).populate('classes').populate('branch')
+        var user = await User.findOne({ _id: decoded._id, 'tokens.token': token }).populate('classes')
 
-        if (!user) {
-            throw new Error("Login needed")
+        if(user.__t == "Teacher"){
+            user = await User.findOne({ _id: decoded._id, 'tokens.token': token }).populate('classes.class').populate('courses.course')
         }
         
         if(!user.admin){

@@ -7,10 +7,13 @@ const Student = require('../../models/users/student')
 const router = new express.Router()
 
 router.post('/users/student/signup', async (req, res) => {
-    const user = new Student(req.body)
+    const temp_user = new Student(req.body)
     try {
-        await user.save()
-        const token = await user.generateAuthToken()
+        await temp_user.save()
+        const token = await temp_user.generateAuthToken()
+
+        const user = await Student.findOne({ username: temp_user.username }).populate('classes')
+
         res.status(201).send({ user, token })
     } catch (e) {
         if(e.keyPattern.email === 1 && e.code === 11000){

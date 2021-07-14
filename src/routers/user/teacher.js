@@ -9,14 +9,18 @@ const Teacher = require('../../models/users/teacher')
 const router = new express.Router()
 
 router.post('/users/teacher/signup', async (req, res) => {
-    const user = new Teacher(req.body)
+    var temp_user = new Teacher(req.body)
 
     try {
-        await user.save()
-        const token = await user.generateAuthToken()
+        await temp_user.save()
+        const token = await temp_user.generateAuthToken()
+
+        const user = await Teacher.findOne({ username: temp_user.username }).populate('classes.class').populate('courses.course')
+
         res.status(201).send({ user, token })
     } catch (e) {
-        if(e.keyPattern.email === 1 && e.code === 11000){
+        return console.log(e)
+        if(e.keyPattern.username === 1 && e.code === 11000){
             return res.status(400).send({
                 error: "Email is already taken!"
             })
