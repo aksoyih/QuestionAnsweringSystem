@@ -1,6 +1,8 @@
 const express = require('express')
-const auth = require('../../middleware/auth')
 
+
+const auth = require('../../middleware/auth/auth')
+const auth_teacher = require('../../middleware/auth/teacher')
 
 const Teacher = require('../../models/users/teacher')
 

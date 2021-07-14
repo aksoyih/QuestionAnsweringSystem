@@ -1,5 +1,8 @@
 const express = require('express')
-const auth = require('../../middleware/auth')
+
+const auth = require('../../middleware/auth/auth')
+const auth_teacher = require('../../middleware/auth/teacher')
+const auth_admin = require('../../middleware/auth/admin')
 
 const User = require('../../models/users/base')
 
@@ -11,7 +14,6 @@ router.post('/users/login', async (req, res) => {
         const token = await user.generateAuthToken()
         res.send({ user: user, token })
     } catch (e) {
-        console.log(e)
         res.status(400).send()
     }
 })
@@ -39,5 +41,32 @@ router.post('/users/logout', auth, async (req, res) => {
         res.status(500).send()
     }
 })
+
+router.get('/profile/me', auth_teacher, async (req, res) => {
+    res.send(req.user)
+})
+
+
+router.get('/profile/:username', auth_admin, async (req, res) => {
+    
+    const username = req.params.username;
+
+    try {
+        const user = await User.findOne({username})
+        
+        console.log(user)
+        
+        if(!user){
+            return res.status(404).send()
+        }
+
+        res.send(user)
+
+    } catch (error) {
+        res.status(500).send(error)
+    }
+
+})
+
 
 module.exports = router
