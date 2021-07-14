@@ -6,6 +6,7 @@ const teacherRouter = require('./routers/user/teacher')
 const userRouter = require('./routers/user/user')
 
 const classRouter = require('./routers/utils/class')
+const branchRouter = require('./routers/utils/branch')
 
 const app = express()
 
@@ -16,6 +17,7 @@ app.use(teacherRouter)
 app.use(userRouter)
 
 
+app.use(branchRouter)
 app.use(classRouter)
 
 

@@ -3,12 +3,15 @@ const Base = require('./base');
 
 const Teacher = Base.discriminator('Teacher', new mongoose.Schema({
     branch: { 
-        type: String, 
-        required: true 
+      type: mongoose.Schema.Types.ObjectId,
+      required: true ,
+      ref: 'Branches'
     },
     classes: [
         {
-            type: String
+            class:{
+                type: String
+            }
         }
     ],
     admin:{
