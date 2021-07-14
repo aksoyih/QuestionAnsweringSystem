@@ -12,7 +12,7 @@ router.post('/courses/add', auth ,async (req, res) => {
         await course.save()
         res.status(201).send({course})
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send({error: error.message})
     }
 })
 
@@ -48,7 +48,6 @@ router.patch('/courses/:id', auth, async (req, res) => {
         res.send(course)
 
     } catch (e) {
-        return console.log(e)
         res.status(400).send({error: e.message})
     }
 })

@@ -7,6 +7,7 @@ const userRouter = require('./routers/user/user')
 
 const classRouter = require('./routers/utils/class')
 const courseRouter = require('./routers/utils/course')
+const achievementsRouter = require('./routers/utils/achievement')
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use(userRouter)
 
 app.use(courseRouter)
 app.use(classRouter)
+app.use(achievementsRouter)
 
 
 module.exports = app

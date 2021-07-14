@@ -13,7 +13,7 @@ router.post('/classes/add', async (req, res) => {
         res.status(201).send({ createdClass })
     } catch (e) {
         console.log(e)
-        res.status(400).send(e)
+        res.status(400).send({error: error.message})
     }
 })
 
@@ -22,7 +22,7 @@ router.get('/classes', auth, async (req, res) => {
         const classes = await Class.find({})
         res.send(classes)
     } catch (error) {
-        res.status(400).send(error)
+        res.status(400).send({error: error.message})
     }
 })
 
