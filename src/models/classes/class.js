@@ -8,7 +8,11 @@ const classSchema = new mongoose.Schema({
     },
     logo: {
         type: Buffer
-    }
+    },
+    students: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 },{
     timestamps: true
 })
@@ -20,8 +24,17 @@ classSchema.methods.toJSON = function () {
     delete classObject.updatedAt
     delete classObject.__v
 
-    return classObject
-}
+    classObject.students.forEach(student => {
+        delete student.__t
+        delete student.__v
+        delete student.tokens
+        delete student.password
+        delete student.createdAt
+        delete student.updatedAt
+        delete student.classes
+    });
+
+    return classObject}
 
 const Class = mongoose.model('Classes', classSchema)
 
