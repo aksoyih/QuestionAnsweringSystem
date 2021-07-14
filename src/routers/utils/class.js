@@ -29,6 +29,12 @@ router.get('/classes', auth, async (req, res) => {
 router.get('/classes/:id', auth, async (req, res) => {
     try {
         const classes = await Class.findOne({ _id: req.params.id}).populate('students')
+
+        if(!classes){
+            return res.status(400).send({error: "Class not found"})
+        }
+
+        console.log(classes)
         res.send(classes)
     } catch (error) {
         res.status(400).send({error: error.message})
@@ -49,7 +55,7 @@ router.patch('/classes/:id', auth, async (req, res) => {
         const savedClass = await Class.findOne({ _id: req.params.id})
 
         if (!savedClass) {
-            res.status(400).send("Could not find class")
+            res.status(400).send("Class not found")
         }
 
         updates.forEach((update) => savedClass[update] = req.body[update])
@@ -65,7 +71,7 @@ router.delete('/classes/:id', auth, async (req, res) => {
         const savedClass = await Class.findOneAndDelete({ _id: req.params.id})
 
         if (!savedClass) {
-            res.status(404).send({error: 'Could not find class'})
+            res.status(404).send({error: 'Class not found'})
         }
 
         res.send(savedClass)
@@ -80,7 +86,7 @@ router.patch('/classes/:id/students', async (req, res) => {
         const savedClass = await Class.findOne({ _id: req.params.id})
 
         if (!savedClass) {
-            return res.status(400).send("Could not find class")
+            return res.status(400).send("Class not found")
         }
 
         savedClass.students = req.body.students
