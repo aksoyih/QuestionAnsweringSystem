@@ -72,8 +72,8 @@ baseSchema.methods.generateAuthToken = async function () {
     return token
 }
 
-baseSchema.statics.findByCredentials = async (email, password) => {
-    const user = await User.findOne({ email })
+baseSchema.statics.findByCredentials = async (username, password) => {
+    const user = await Base.findOne({ username })
 
     if (!user) {
         throw new Error('Unable to login')

@@ -1,5 +1,5 @@
 const express = require('express')
-const auth = require('../../middleware/user_auth/student')
+const auth = require('../../middleware/auth')
 
 const Student = require('../../models/users/student')
 

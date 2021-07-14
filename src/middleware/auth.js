@@ -1,16 +1,16 @@
 const jwt = require('jsonwebtoken')
-const Student = require('../../models/users/student')
+
+const User = require('../models/users/base')
 
 const auth = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '')
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-        const user = await Student.findOne({ _id: decoded._id, 'tokens.token': token })
+        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
 
         if (!user) {
-            console.log('user not found?')
-            throw new Error()
+            throw new Error("User not found")
         }
 
         req.token = token
@@ -18,8 +18,7 @@ const auth = async (req, res, next) => {
         next()
 
     } catch (e) {
-
-        res.status(401).send({ error: e })
+        res.status(401).send({ error: "User not found" })
     }
 }
 
