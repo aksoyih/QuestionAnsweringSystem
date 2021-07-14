@@ -14,7 +14,8 @@ router.post('/users/login', async (req, res) => {
         const token = await user.generateAuthToken()
         res.send({ user: user, token })
     } catch (e) {
-        res.status(400).send()
+        console.log(e)
+        res.status(400).send({error: e.message})
     }
 })
 
@@ -42,7 +43,7 @@ router.post('/users/logout', auth, async (req, res) => {
     }
 })
 
-router.get('/profile/me', auth_teacher, async (req, res) => {
+router.get('/profile/me', auth, async (req, res) => {
     res.send(req.user)
 })
 

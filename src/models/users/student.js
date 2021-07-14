@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Base = require('./base');
 
 const Student = Base.discriminator('Student', new mongoose.Schema({
-    class: { 
+    classes: { 
       type: mongoose.Schema.Types.ObjectId,
       required: true ,
       ref: 'Classes'
