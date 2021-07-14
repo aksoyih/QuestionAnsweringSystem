@@ -15,17 +15,44 @@ router.post('/users/teacher/signup', async (req, res) => {
         await temp_user.save()
         const token = await temp_user.generateAuthToken()
 
-        const user = await Teacher.findOne({ username: temp_user.username }).populate('classes.class').populate('courses.course')
+        var user = await Teacher.findOne({ username: temp_user.username }).populate('classes').populate('courses')
+
+        const userObject = user.toObject()
+
+        userObject.courses.forEach(course => {
+            delete course.__v
+            delete course.createdAt
+            delete course.updatedAt
+        })
+
+        userObject.classes.forEach(classObj => {
+            delete classObj.students
+            delete classObj.createdAt
+            delete classObj.updatedAt
+            delete classObj.__v
+        })
+
+        delete userObject.password
+        delete userObject.tokens
+        delete userObject.avatar
+
+        delete userObject.__t
+        delete userObject.__v
+
+        user = userObject
 
         res.status(201).send({ user, token })
+
     } catch (e) {
-        return console.log(e)
-        if(e.keyPattern.username === 1 && e.code === 11000){
-            return res.status(400).send({
-                error: "Email is already taken!"
-            })
+        if(e.keyPattern){
+            if(e.keyPattern.username === 1 && e.code === 11000){
+                return res.status(400).send({
+                    error: "Email is already taken!"
+                })
+            }
+        }else{
+            res.status(400).send({error: e.message})
         }
-        res.status(400).send(e)
     }
 })
 

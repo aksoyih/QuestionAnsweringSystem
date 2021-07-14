@@ -12,6 +12,22 @@ const achievementsSchema = new mongoose.Schema({
     }
 })
 
+achievementsSchema.methods.toJSON = function () {
+    
+    const achievement = this.toObject()
+
+    delete achievement.createdAt
+    delete achievement.updatedAt
+    delete achievement.__v
+
+    delete achievement.course._id
+    delete achievement.course.createdAt
+    delete achievement.course.updatedAt
+    delete achievement.course.__v
+
+    return achievement
+}
+
 const achievements = mongoose.model('achievements', achievementsSchema)
 
 module.exports = achievements

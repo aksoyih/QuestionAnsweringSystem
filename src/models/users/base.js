@@ -3,6 +3,8 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
+const Class = require('../classes/class')
+
 const baseOptions = {
   discriminatorKey: 'itemtype', // our discriminator key, could be anything
   collection: 'users', // the name of our collection
@@ -35,12 +37,7 @@ const baseSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 7,
-        trim: true,
-        validate(value) {
-            if (value.toLowerCase().includes('password')) {
-                throw new Error('Password cannot contain "password"')
-            }
-        }
+        trim: true
     },
     tokens: [{
         token: {
@@ -69,6 +66,7 @@ baseSchema.methods.toJSON = function () {
 
 baseSchema.methods.generateAuthToken = async function () {
     const user = this
+
     const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET)
 
     user.tokens = user.tokens.concat({ token })
@@ -77,23 +75,42 @@ baseSchema.methods.generateAuthToken = async function () {
     return token
 }
 
+baseSchema.methods.addToClass = async function () {
+    const user = this
+    const class_id = user.class
+
+    const given_class = await Class.findOne({ _id: class_id })
+
+    if(given_class.students.includes(user._id)){
+        return console.log('exists')
+    }else{
+        given_class.students.push(mongoose.Types.ObjectId(user._id))
+    }
+
+    given_class.save()
+}
+
+
 baseSchema.statics.findByCredentials = async (username, password) => {    
 
-    var user = await Base.findOne({ username }).populate('classes')
-
-    if(user.__t == "Teacher"){
-        user = await Base.findOne({ username }).populate('classes.class').populate('courses.course')
-    }
+    var user = await Base.findOne({ username })
 
 
     if (!user) {
         throw new Error('Unable to login')
     }
 
+    
     const isMatch = await bcrypt.compare(password, user.password)
 
     if (!isMatch) {
         throw new Error('Unable to login')
+    }
+
+    if(user.__t == "Teacher"){
+        user = await Base.findOne({ username }).populate('classes').populate('courses')
+    }else{
+        user = await Base.findOne({ username }).populate('classes')
     }
 
     return user
@@ -101,6 +118,8 @@ baseSchema.statics.findByCredentials = async (username, password) => {
 
 // Hash the plain text password before saving
 baseSchema.pre('save', async function (next) {
+    //console.log("pre save initiated")
+
     const user = this
 
     if (user.isModified('password')) {

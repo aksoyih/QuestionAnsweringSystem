@@ -11,7 +11,7 @@ const auth = async (req, res, next) => {
 
 
         if(user.__t == "Teacher"){
-            user = await User.findOne({ _id: decoded._id, 'tokens.token': token }).populate('classes.class').populate('courses.course')
+            user = await User.findOne({ _id: decoded._id, 'tokens.token': token }).populate('classes').populate('courses')
         }
         
         if(user.__t != "Teacher"){

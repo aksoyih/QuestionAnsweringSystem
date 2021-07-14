@@ -19,7 +19,7 @@ router.post('/classes/add', async (req, res) => {
 
 router.get('/classes', auth, async (req, res) => {
     try {
-        const classes = await Class.find({})
+        const classes = await Class.find({}).populate('students')
         res.send(classes)
     } catch (error) {
         res.status(400).send({error: error.message})
@@ -33,8 +33,7 @@ router.get('/classes/:id', auth, async (req, res) => {
         if(!classes){
             return res.status(400).send({error: "Class not found"})
         }
-
-        console.log(classes)
+        
         res.send(classes)
     } catch (error) {
         res.status(400).send({error: error.message})

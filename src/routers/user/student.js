@@ -8,9 +8,13 @@ const router = new express.Router()
 
 router.post('/users/student/signup', async (req, res) => {
     const temp_user = new Student(req.body)
+
     try {
         await temp_user.save()
+
         const token = await temp_user.generateAuthToken()
+
+        temp_user.addToClass()
 
         const user = await Student.findOne({ username: temp_user.username }).populate('class')
 

@@ -3,17 +3,14 @@ const Base = require('./base');
 
 const Teacher = Base.discriminator('Teacher', new mongoose.Schema({
     courses: [{
-        course: {type: mongoose.Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             required: true ,
             ref: 'Courses'
-        }
     }],
     classes: [
         {
-            class:{
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Classes'
-            }
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Classes'
         }
     ],
     admin:{

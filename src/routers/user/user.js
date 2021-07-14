@@ -44,7 +44,40 @@ router.post('/users/logout', auth, async (req, res) => {
 })
 
 router.get('/profile/me', auth, async (req, res) => {
-    res.send(req.user)
+    const user = req.user
+    const userObject = user.toObject()
+
+    if(userObject.__t == "Student"){
+        delete userObject.class.students
+        delete userObject.class.createdAt
+        delete userObject.class.updatedAt
+        delete userObject.class.__v
+    }else{
+
+        userObject.courses.forEach(course => {
+            delete course.__v
+            delete course.createdAt
+            delete course.updatedAt
+        })
+
+        userObject.classes.forEach(classObj => {
+            delete classObj.students
+            delete classObj.createdAt
+            delete classObj.updatedAt
+            delete classObj.__v
+        })
+
+
+    }
+
+    delete userObject.password
+    delete userObject.tokens
+    delete userObject.avatar
+
+    delete userObject.__t
+    delete userObject.__v
+
+    res.send(userObject)
 })
 
 
@@ -68,6 +101,5 @@ router.get('/profile/:username', auth_admin, async (req, res) => {
     }
 
 })
-
 
 module.exports = router
