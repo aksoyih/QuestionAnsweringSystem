@@ -10,7 +10,8 @@ const Teacher = Base.discriminator('Teacher', new mongoose.Schema({
     classes: [
         {
             class:{
-                type: String
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Classes'
             }
         }
     ],

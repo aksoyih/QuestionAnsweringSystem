@@ -72,10 +72,15 @@ baseSchema.methods.generateAuthToken = async function () {
     return token
 }
 
-baseSchema.statics.findByCredentials = async (username, password) => {    
-    const user = await Base.findOne({ username }).populate('classes')
+baseSchema.statics.findByCredentials = async (username, password) => {
 
-    console.log(user)
+    var user = await Base.findOne({ username }).populate('classes')
+
+    if(user.__t == "Teacher"){
+        user = await Base.findOne({ username }).populate('classes.class').populate('branch')
+    }
+
+    //const user = await Base.findOne({ username }).populate('classes')
 
 
     if (!user) {

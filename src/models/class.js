@@ -13,6 +13,16 @@ const classSchema = new mongoose.Schema({
     timestamps: true
 })
 
+classSchema.methods.toJSON = function () {
+    const classObject = this.toObject()
+
+    delete classObject.createdAt
+    delete classObject.updatedAt
+    delete classObject.__v
+
+    return classObject
+}
+
 const Class = mongoose.model('Classes', classSchema)
 
 module.exports = Class
