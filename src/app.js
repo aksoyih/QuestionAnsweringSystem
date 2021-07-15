@@ -7,7 +7,12 @@ const userRouter = require('./routers/user/user')
 
 const classRouter = require('./routers/utils/class')
 const courseRouter = require('./routers/utils/course')
-const achievementsRouter = require('./routers/utils/achievement')
+const achievementRouter = require('./routers/utils/achievement')
+const subjectRouter = require('./routers/utils/subject')
+
+const questionRouter = require('./routers/QA/question')
+const answerRouter = require('./routers/QA/answer')
+
 
 const app = express()
 
@@ -17,10 +22,13 @@ app.use(studentRouter)
 app.use(teacherRouter)
 app.use(userRouter)
 
+app.use(questionRouter)
+app.use(answerRouter)
 
 app.use(courseRouter)
 app.use(classRouter)
-app.use(achievementsRouter)
+app.use(achievementRouter)
+app.use(subjectRouter)
 
 
 module.exports = app
