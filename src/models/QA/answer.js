@@ -43,9 +43,6 @@ answersSchema.methods.toJSON = function () {
     
     const answer = this.toObject()
 
-    console.log(answer.teacher)
-
-
     delete answer.teacher.courses
     delete answer.teacher.classes
     delete answer.teacher.admin

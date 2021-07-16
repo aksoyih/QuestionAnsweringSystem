@@ -3,11 +3,13 @@ const shortid = require('shortid')
 
 const auth = require('../../middleware/auth/auth')
 const Answer = require('../../models/QA/answer')
+const Question = require('../../models/QA/question')
 
 const router = new express.Router()
 
 router.post('/answers/add', auth ,async (req, res) => {
     const answer = new Answer(req.body)
+    const question = await Question.findById(req.body.question)
 
     answer.teacher = req.user._id
 
@@ -22,7 +24,9 @@ router.post('/answers/add', auth ,async (req, res) => {
 
     try {
         await answer.save()
-
+        question.answer = answer._id
+        await question.save()
+        
         res.status(201).send({answer})
     } catch (e) {
         res.status(400).send({error: e.message})
