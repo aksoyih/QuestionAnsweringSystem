@@ -1,11 +1,13 @@
 const express = require('express')
+
 const auth = require('../../middleware/auth/auth')
+const auth_admin = require('../../middleware/auth/admin')
 
 const Achievement = require('../../models/courses/achievement')
 
 const router = new express.Router()
 
-router.post('/achievements/add', async (req, res) => {
+router.post('/achievements/add', auth_admin, async (req, res) => {
     const achievement = new Achievement(req.body)
 
     try {
@@ -25,7 +27,7 @@ router.get('/achievements', auth, async (req, res) => {
     }
 })
 
-router.patch('/achievements/:id', auth, async (req, res) => {
+router.patch('/achievements/:id', auth_admin, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['achievement_name','course']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -49,7 +51,7 @@ router.patch('/achievements/:id', auth, async (req, res) => {
     }
 })
 
-router.delete('/achievements/:id', auth, async (req, res) => {
+router.delete('/achievements/:id', auth_admin, async (req, res) => {
     try {
         const achievement = await Achievement.findOneAndDelete({ _id: req.params.id})
 

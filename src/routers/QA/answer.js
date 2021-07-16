@@ -2,12 +2,16 @@ const express = require('express')
 const shortid = require('shortid')
 
 const auth = require('../../middleware/auth/auth')
+const auth_teacher = require('../../middleware/auth/teacher')
+const auth_admin = require('../../middleware/auth/admin')
+
+
 const Answer = require('../../models/QA/answer')
 const Question = require('../../models/QA/question')
 
 const router = new express.Router()
 
-router.post('/answers/add', auth ,async (req, res) => {
+router.post('/answers/add', auth_teacher ,async (req, res) => {
     const answer = new Answer(req.body)
     const question = await Question.findById(req.body.question)
 
@@ -26,7 +30,7 @@ router.post('/answers/add', auth ,async (req, res) => {
         await answer.save()
         question.answer = answer._id
         await question.save()
-        
+
         res.status(201).send({answer})
     } catch (e) {
         res.status(400).send({error: e.message})
@@ -51,7 +55,7 @@ router.get('/answers/:shortid', auth, async (req, res) => {
     }
 })
 
-router.patch('/answers/:shortid', auth, async (req, res) => {
+router.patch('/answers/:shortid', auth_teacher, async (req, res) => {
 
     const shortid = req.params.shortid
 
@@ -72,6 +76,10 @@ router.patch('/answers/:shortid', auth, async (req, res) => {
             throw new Error("Could not find answer")
         }
 
+        if((answer.teacher != req.user._id) && !(req.user.admin)){
+            throw new Error("No permissions to delete this answer")
+        }
+
         updates.forEach((update) => answer[update] = req.body[update])
         await answer.save()
 
@@ -82,7 +90,7 @@ router.patch('/answers/:shortid', auth, async (req, res) => {
     }
 })
 
-router.delete('/answers/:shortid', auth, async (req, res) => {
+router.delete('/answers/:shortid', auth_admin, async (req, res) => {
     const shortid = req.params.shortid
 
     try {

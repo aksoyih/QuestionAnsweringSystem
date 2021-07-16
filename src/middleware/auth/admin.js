@@ -14,7 +14,7 @@ const auth = async (req, res, next) => {
         }
         
         if(!user.admin){
-            throw new Error("You need admin permissions to view that page")
+            throw new Error("You need admin permissions")
         }
 
         req.token = token

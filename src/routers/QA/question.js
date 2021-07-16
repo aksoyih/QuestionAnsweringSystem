@@ -89,14 +89,23 @@ router.delete('/questions/:shortid', auth, async (req, res) => {
     const shortid = req.params.shortid
 
     try {
-        const question = await Question.findOneAndDelete({shortid})
+        
+        var question = await Question.findOne({shortid})
 
         if (!question) {
             return res.status(404).send({error: 'Could not find question'})
         }
 
+        if( (question.student.toString() === req.user._id.toString()) || (req.user.admin)){
+            question = await Question.findOneAndDelete({shortid})
+        }else{
+            return res.status(404).send({error: 'Not authorized'})
+        }
+
         res.send(question)
+
     } catch (e) {
+        console.log(e)
         res.status(500).send({error: e.message})
     }
 })
