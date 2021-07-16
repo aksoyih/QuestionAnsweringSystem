@@ -10,6 +10,9 @@ const Question = require('../../models/QA/question')
 const router = new express.Router()
 
 router.post('/questions/add', auth ,async (req, res) => {
+    if(req.user.__t == "Teacher")
+        res.status(401).send({error: "Only students can ask questions"})
+
     const question = new Question(req.body)
 
     question.student = req.user._id
@@ -23,13 +26,20 @@ router.post('/questions/add', auth ,async (req, res) => {
         }else{
             question.shortid = shortid.generate()
         }
+    
 
     try {
+        await req.user.checkQuota(req.body.course)
+    } catch (error) {
+        return res.status(400).send({error: error.message})
+    }
+    
+    try {
         await question.save()
-
-        res.status(201).send({question})
+        
+        return res.status(201).send({question})
     } catch (e) {
-        res.status(400).send({error: e.message})
+        return res.status(400).send({error: e.message})
     }
 })
 
