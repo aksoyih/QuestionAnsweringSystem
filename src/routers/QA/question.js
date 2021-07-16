@@ -1,15 +1,18 @@
 const express = require('express')
-const mongoose = require('mongoose')
-
 const shortid = require('shortid')
+const multer = require('multer')
 
 const auth = require('../../middleware/auth/auth')
-
 const Question = require('../../models/QA/question')
+const {uploadFile, getFile, deleteFile} = require('../../utils/s3')
 
 const router = new express.Router()
 
-router.post('/questions/add', auth ,async (req, res) => {
+const upload = multer({
+    dest: '../uploads/question/'
+})
+
+router.post('/questions/add', upload.single('picture'), auth ,async (req, res) => {
     if(req.user.__t == "Teacher")
         res.status(401).send({error: "Only students can ask questions"})
 
@@ -34,13 +37,47 @@ router.post('/questions/add', auth ,async (req, res) => {
         return res.status(400).send({error: error.message})
     }
     
+
+    var result
+    try {
+        if(req.file){
+            result = await uploadFile(req.file, "questions")
+            question.picture = result.key
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send({error: error.message})
+    }
+
     try {
         await question.save()
-        
+
         return res.status(201).send({question})
     } catch (e) {
         return res.status(400).send({error: e.message})
     }
+})
+
+router.get('/questions/image/:shortid' ,async (req, res) => {
+    const shortid = req.params.shortid
+    
+    try {
+        const question = await Question.findOne({shortid})
+
+        if (!question) {
+            return res.status(400).send({error: "Could not find question"})
+        }
+
+        const picture_key = question.picture
+
+        const readStream = getFile(picture_key, "questions")
+
+        res.set('Content-Type','image/png')
+        readStream.pipe(res)
+    } catch (error) {
+        console.log(error)
+    }
+
 })
 
 router.get('/questions/:shortid', auth, async (req, res) => {
@@ -64,7 +101,7 @@ router.get('/questions/:shortid', auth, async (req, res) => {
     }
 })
 
-router.patch('/questions/:shortid', auth, async (req, res) => {
+router.patch('/questions/:shortid', upload.single('picture'), auth, async (req, res) => {
 
     const shortid = req.params.shortid
 
@@ -86,6 +123,29 @@ router.patch('/questions/:shortid', auth, async (req, res) => {
         }
 
         updates.forEach((update) => question[update] = req.body[update])
+
+        var result
+
+        if(question.picture){
+            try {
+                result = await deleteFile(question.picture)
+            } catch (error) {
+                return res.status(404).send({error: error.message})
+            }
+        }
+
+        if(req.file){
+            try {
+                if(req.file){
+                    result = await uploadFile(req.file, "questions")
+                    question.picture = result.key
+                }
+            } catch (error) {
+                console.log(error)
+                return res.status(400).send({error: error.message})
+            }
+        }
+
         await question.save()
 
         res.send(question)
@@ -112,6 +172,13 @@ router.delete('/questions/:shortid', auth, async (req, res) => {
             return res.status(404).send({error: 'Not authorized'})
         }
 
+        if(question.picture){
+            try {
+                const result = await deleteFile(question.picture)
+            } catch (error) {
+                return res.status(404).send({error: error.message})
+            }
+        }
         res.send(question)
 
     } catch (e) {

@@ -1,17 +1,23 @@
 const express = require('express')
 const shortid = require('shortid')
+const multer = require('multer')
 
 const auth = require('../../middleware/auth/auth')
 const auth_teacher = require('../../middleware/auth/teacher')
 const auth_admin = require('../../middleware/auth/admin')
 
+const {uploadFile, getFile, deleteFile} = require('../../utils/s3')
 
 const Answer = require('../../models/QA/answer')
 const Question = require('../../models/QA/question')
 
 const router = new express.Router()
 
-router.post('/answers/add', auth_teacher ,async (req, res) => {
+const upload = multer({
+    dest: '../uploads/answers/'
+})
+
+router.post('/answers/add', upload.single('picture'), auth_teacher ,async (req, res) => {
     const answer = new Answer(req.body)
     const question = await Question.findById(req.body.question)
 
@@ -26,9 +32,21 @@ router.post('/answers/add', auth_teacher ,async (req, res) => {
             answer.shortid = shortid.generate()
         }
 
+        var result
+        try {
+        if(req.file){
+                result = await uploadFile(req.file, "answers")
+                answer.picture = result.key
+            }
+        } catch (error) {
+            console.log(error)
+            return res.status(400).send({error: error.message})
+        }
+
     try {
         await answer.save()
         question.answer = answer._id
+
         await question.save()
 
         res.status(201).send({answer})
@@ -55,7 +73,29 @@ router.get('/answers/:shortid', auth, async (req, res) => {
     }
 })
 
-router.patch('/answers/:shortid', auth_teacher, async (req, res) => {
+router.get('/answers/image/:shortid' ,async (req, res) => {
+    const shortid = req.params.shortid
+    
+    try {
+        const answer = await Answer.findOne({shortid})
+
+        if (!answer) {
+            return res.status(400).send({error: "Could not find answer"})
+        }
+
+        const picture_key = answer.picture
+
+        const readStream = getFile(picture_key, "answers")
+
+        res.set('Content-Type','image/png')
+        readStream.pipe(res)
+    } catch (error) {
+        console.log(error)
+    }
+
+})
+
+router.patch('/answers/:shortid', upload.single('picture'), auth_teacher, async (req, res) => {
 
     const shortid = req.params.shortid
 
@@ -81,8 +121,29 @@ router.patch('/answers/:shortid', auth_teacher, async (req, res) => {
         }
 
         updates.forEach((update) => answer[update] = req.body[update])
-        await answer.save()
+        
+        if(answer.picture){
+            try {
+                result = await deleteFile(answer.picture)
+            } catch (error) {
+                return res.status(404).send({error: error.message})
+            }
+        }
 
+        var result
+
+        try {
+        if(req.file){
+            result = await uploadFile(req.file, "answers")
+            answer.picture = result.key
+            }
+        } catch (error) {
+            return res.status(400).send({error: error.message})
+        }
+        
+        
+        
+        await answer.save()
         res.send(answer)
 
     } catch (e) {
@@ -98,6 +159,14 @@ router.delete('/answers/:shortid', auth_admin, async (req, res) => {
 
         if (!answer) {
             return res.status(404).send({error: 'Could not find answer'})
+        }
+
+        if(answer.picture){
+            try {
+                const result = await deleteFile(answer.picture)
+            } catch (error) {
+                return res.status(404).send({error: error.message})
+            }
         }
 
         res.send(answer)
