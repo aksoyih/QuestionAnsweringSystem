@@ -8,13 +8,13 @@ const courseSchema = new mongoose.Schema({
     },
     quota:{
         type: Number,
-        required: true,
         valide:{
             validator: function(val){
                 if(val<0)
                     return false
             }
-        }
+        },
+        default: 10
     }
 })
 
