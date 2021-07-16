@@ -1,6 +1,9 @@
 const express = require('express')
 require('./db/mongoose')
 
+const helmet = require("helmet");
+const morgan = require('morgan')
+
 const studentRouter = require('./routers/user/student')
 const teacherRouter = require('./routers/user/teacher')
 const userRouter = require('./routers/user/user')
@@ -17,6 +20,8 @@ const answerRouter = require('./routers/QA/answer')
 const app = express()
 
 app.use(express.json())
+app.use(helmet())
+app.use(morgan('tiny'))
 
 app.use(studentRouter)
 app.use(teacherRouter)
