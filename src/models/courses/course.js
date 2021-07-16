@@ -5,6 +5,16 @@ const courseSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    quota:{
+        type: Number,
+        required: true,
+        valide:{
+            validator: function(val){
+                if(val<0)
+                    return false
+            }
+        }
     }
 })
 

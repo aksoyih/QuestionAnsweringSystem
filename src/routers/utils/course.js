@@ -11,7 +11,7 @@ router.post('/courses/add', auth ,async (req, res) => {
     try {
         await course.save()
         res.status(201).send({course})
-    } catch (e) {
+    } catch (error) {
         res.status(400).send({error: error.message})
     }
 })
@@ -28,7 +28,7 @@ router.get('/courses', auth, async (req, res) => {
 
 router.patch('/courses/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['course_name']
+    const allowedUpdates = ['course_name', 'quota']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
 
