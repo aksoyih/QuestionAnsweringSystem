@@ -117,3 +117,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 config/dev.env
+src/front-end.txt

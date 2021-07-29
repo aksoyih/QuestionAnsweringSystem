@@ -1,6 +1,9 @@
 const express = require('express')
 const shortid = require('shortid')
 const multer = require('multer')
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
 
 const auth = require('../../middleware/auth/auth')
 const Question = require('../../models/QA/question')
@@ -9,7 +12,7 @@ const {uploadFile, getFile, deleteFile} = require('../../utils/s3')
 const router = new express.Router()
 
 const upload = multer({
-    dest: '../uploads/question/'
+    dest: '/uploads/question/'
 })
 
 router.post('/questions/add', upload.single('picture'), auth ,async (req, res) => {
@@ -42,7 +45,9 @@ router.post('/questions/add', upload.single('picture'), auth ,async (req, res) =
     try {
         if(req.file){
             result = await uploadFile(req.file, "questions")
+            console.log(result)
             question.picture = result.key
+            await unlinkFile(req.file.path)
         }
     } catch (error) {
         console.log(error)

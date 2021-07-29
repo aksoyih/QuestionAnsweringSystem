@@ -78,6 +78,10 @@ questionsSchema.methods.toJSON = function () {
 
     delete question.__v
 
+    if(question.picture)
+        question.picture = `${process.env.DOMAIN}/questions/image/${question.shortid}`
+
+        
     return question
 }
 

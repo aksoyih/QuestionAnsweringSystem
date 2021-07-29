@@ -54,6 +54,8 @@ answersSchema.methods.toJSON = function () {
     delete answer.teacher.password
     delete answer.teacher.avatar
     
+    if(answer.picture)
+        answer.picture = `${process.env.DOMAIN}/answers/image/${answer.shortid}`
 
     return answer
 }

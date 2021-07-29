@@ -1,6 +1,9 @@
 const express = require('express')
 const shortid = require('shortid')
 const multer = require('multer')
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
 
 const auth = require('../../middleware/auth/auth')
 const auth_teacher = require('../../middleware/auth/teacher')
@@ -14,7 +17,7 @@ const Question = require('../../models/QA/question')
 const router = new express.Router()
 
 const upload = multer({
-    dest: '../uploads/answers/'
+    dest: '/uploads/answers/'
 })
 
 router.post('/answers/add', upload.single('picture'), auth_teacher ,async (req, res) => {
@@ -36,6 +39,8 @@ router.post('/answers/add', upload.single('picture'), auth_teacher ,async (req, 
         try {
         if(req.file){
                 result = await uploadFile(req.file, "answers")
+                await unlinkFile(req.file.path)
+                
                 answer.picture = result.key
             }
         } catch (error) {
