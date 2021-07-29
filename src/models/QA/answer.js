@@ -17,7 +17,7 @@ const answersSchema = new mongoose.Schema({
             type:String
     },
     audio:{
-            tyoe:String
+            type:String
     },
     question:{
         type: mongoose.Schema.Types.ObjectId,
