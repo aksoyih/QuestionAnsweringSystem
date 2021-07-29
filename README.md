@@ -5,30 +5,26 @@ This project is a Node.js powered API that allows users to send requests to mult
 
 ## Run Locally
 
-Clone the project
+1. Clone the project
 
 ```bash
   git clone https://github.com/aksoyih/QuestionAnsweringSystem.git
 ```
 
-Go to the project directory
+2. Go to the project directory
 
 ```bash
   cd QuestionAnsweringSystem
 ```
 
-Install dependencies
+3. Install dependencies
 
 ```bash
   npm install
 ```
-Start the MongoDB
+4. Start the MongoDB
 
-```bash
-  Depends on the OS
-```
-
-Start the server
+5. Start the server
 
 ```bash
   npm run start
