@@ -1,0 +1,962 @@
+{
+	"info": {
+		"_postman_id": "bffc2853-7006-45a7-94ac-6cd50653eaa3",
+		"name": "px",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "teachers",
+					"item": [
+						{
+							"name": "teacher signup",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if(pm.response.code == 201){\r",
+											"    pm.environment.set('authToken', pm.response.json().token);\r",
+											"    pm.environment.set('username', pm.response.json().user.username)\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"haluk_teacher\",\r\n    \"name\": \"Haluk Aksoy\",\r\n    \"email\": \"test1@gmail.com\",\r\n    \"password\": \"helloworld!\",\r\n    \"courses\": [\r\n        \"60ef0f574bc3bd7158f1fa1e\"\r\n    ],\r\n    \"classes\": [\r\n        \"60ef218faae83b46c494372d\",\r\n        \"60ef2194aae83b46c494372f\",\r\n        \"60ef2195aae83b46c4943731\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/users/teacher/signup",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"users",
+										"teacher",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "students",
+					"item": [
+						{
+							"name": "student signup",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if(pm.response.code == 201){\r",
+											"    pm.environment.set('authToken', pm.response.json().token);\r",
+											"    pm.environment.set('username', pm.response.json().user.username)\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"haluk_student\",\r\n    \"name\": \"Haluk Aksoy\",\r\n    \"email\": \"test2@gmail.com\",\r\n    \"password\": \"helloworld!\",\r\n    \"class\": \"60ef218faae83b46c494372d\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/users/student/signup",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"users",
+										"student",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "avatar",
+					"item": [
+						{
+							"name": "upload avatar",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "/C:/Users/user/Desktop/avatars/2.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/profile/me/avatar",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"profile",
+										"me",
+										"avatar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete avatar",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/profile/me/avatar",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"profile",
+										"me",
+										"avatar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "user login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code == 200){\r",
+									"    pm.environment.set('authToken', pm.response.json().token);\r",
+									"    pm.environment.set('username', pm.response.json().user.username)\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"haluk_student\",\r\n    \"password\": \"helloworld!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get my profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/profile/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "utils",
+			"item": [
+				{
+					"name": "classes",
+					"item": [
+						{
+							"name": "add class",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"class_name\": \"12/E\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/classes/add",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"classes",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add students",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"students\": [\r\n        \"60ef218faae83b46c494372a\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/classes/60ef218faae83b46c494372d/students",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"classes",
+										"60ef218faae83b46c494372d",
+										"students"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all classes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/classes",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"classes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get single class",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/classes/60ef218faae83b46c494372d",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"classes",
+										"60ef218faae83b46c494372d"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "edit class",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"class_name\": \"9/A\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/classes/60ef0e08768065287c47da87",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"classes",
+										"60ef0e08768065287c47da87"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete class",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/classes/60ef0e08768065287c47da87",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"classes",
+										"60ef0e08768065287c47da87"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "courses",
+					"item": [
+						{
+							"name": "add course",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"course_name\": \"İngilizce\",\r\n    \"quota\": 10\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/courses/add",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"courses",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all courses",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/courses",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"courses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "edit course",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"course_name\": \"Coğrafya\",\r\n    \"quota\": 10\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/courses/60ef0f684bc3bd7158f1fa2a",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"courses",
+										"60ef0f684bc3bd7158f1fa2a"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete course",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/courses/60ef10dbd13b902d60c80026",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"courses",
+										"60ef10dbd13b902d60c80026"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "subjects",
+					"item": [
+						{
+							"name": "add subject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subject\": \"Türkçe 2. konusu\",\r\n    \"course\": \"60ef0f574bc3bd7158f1fa1e\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/subjects/add",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"subjects",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get subjects of a course",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/subjects/60ef0f574bc3bd7158f1fa1e",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"subjects",
+										"60ef0f574bc3bd7158f1fa1e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "edit subject",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subject\": \"Türkçe PATCH\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/subjects/60f08910d88b2b3d24519342",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"subjects",
+										"60f08910d88b2b3d24519342"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete subject",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/subjects/60f08910d88b2b3d24519342",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"subjects",
+										"60f08910d88b2b3d24519342"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "achievements",
+					"item": [
+						{
+							"name": "add achievement",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"achievement_name\": \"Test achievement 6\",\r\n    \"course\": \"60ef0f5c4bc3bd7158f1fa22\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/achievements/add",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"achievements",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all achievements",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/achievements",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"achievements"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "edit achievement",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"achievement_name\": \"Patch test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/achievements/60ef16ac799401634c8f8325",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"achievements",
+										"60ef16ac799401634c8f8325"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete achievement",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/achievements/60ef16de799401634c8f832f",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"achievements",
+										"60ef16de799401634c8f832f"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "questions",
+			"item": [
+				{
+					"name": "add question",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "course",
+									"value": "60ef0f574bc3bd7158f1fa1e",
+									"type": "text"
+								},
+								{
+									"key": "subject",
+									"value": "60f08911d88b2b3d24519348",
+									"type": "text"
+								},
+								{
+									"key": "details",
+									"value": "hello world!",
+									"type": "text"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"src": "/C:/Users/user/Desktop/avatars/1.png",
+									"disabled": true
+								},
+								{
+									"key": "audio",
+									"value": "audio test",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/questions/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"questions",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update question",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "subject",
+									"value": "60f08911d88b2b3d24519348",
+									"type": "text"
+								},
+								{
+									"key": "details",
+									"value": "patch test",
+									"type": "text"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"src": "/C:/Users/user/Desktop/avatars/17.png"
+								},
+								{
+									"key": "audio",
+									"value": "audio test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/questions/urXmgP74t",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"questions",
+								"urXmgP74t"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a question",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/questions/_dH_NQjlw",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"questions",
+								"_dH_NQjlw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete question",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/questions/vL6TnGfIp",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"questions",
+								"vL6TnGfIp"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "answers",
+			"item": [
+				{
+					"name": "add answer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "details",
+									"value": "s3 image upload test",
+									"type": "text"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"src": "/C:/Users/user/Desktop/avatars/29.png"
+								},
+								{
+									"key": "difficulty",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "question",
+									"value": "60f1dbc5c57f1073f00207fc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/answers/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"answers",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update answer",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "picture",
+									"type": "file",
+									"src": "/C:/Users/user/Desktop/avatars/23.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/answers/_ic_4b9cD",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"answers",
+								"_ic_4b9cD"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get an answer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/answers/ovkY8rHk0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"answers",
+								"ovkY8rHk0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete answer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/answers/_ic_4b9cD",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"answers",
+								"_ic_4b9cD"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
