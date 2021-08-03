@@ -410,3 +410,8 @@ Domain of the application.
 
 **Database:** MongoDB
   
+## TODO List
+- [ ]  Add user update endpoints
+- [ ]  Add email verification
+- [ ]  Add audio support
+- [ ]  Add a basic frontend GUI
