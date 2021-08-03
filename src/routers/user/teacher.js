@@ -56,5 +56,29 @@ router.post('/users/teacher/signup', async (req, res) => {
     }
 })
 
+router.patch('/users/teacher', auth, async (req, res) => {
+    const user = req.user
+
+    const updates = Object.keys(req.body)
+
+    const allowedUpdates = ['courses', 'classes']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+
+    if (!isValidOperation) {
+        return res.status(400).send({error: "Invalid updates!"})
+    }
+
+    try {
+        updates.forEach((update) => user[update] = req.body[update])
+        await user.save()
+
+        res.send(user)
+    } catch (e) {
+        res.status(400).send({error: e.message})
+    }
+})
+
+
 
 module.exports = router

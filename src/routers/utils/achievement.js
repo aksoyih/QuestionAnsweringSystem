@@ -7,7 +7,7 @@ const Achievement = require('../../models/courses/achievement')
 
 const router = new express.Router()
 
-router.post('/achievements/add', auth_admin, async (req, res) => {
+router.post('/achievements/add', auth, async (req, res) => {
     const achievement = new Achievement(req.body)
 
     try {

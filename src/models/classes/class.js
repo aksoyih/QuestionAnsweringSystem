@@ -31,7 +31,7 @@ classSchema.methods.toJSON = function () {
         delete student.password
         delete student.createdAt
         delete student.updatedAt
-        delete student.classes
+        delete student.class
     });
 
     return classObject}
