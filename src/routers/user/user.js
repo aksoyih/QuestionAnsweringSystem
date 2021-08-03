@@ -149,4 +149,67 @@ router.delete('/profile/me/avatar', auth, async (req, res) => {
     res.send()
 })
 
+router.patch('/profile/me', auth, async (req, res) => {
+    const user = req.user
+
+    const updates = Object.keys(req.body)
+
+    const allowedUpdates = ['username', 'name', 'email']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+
+    if (!isValidOperation) {
+        return res.status(400).send("Invalid updates!")
+    }
+
+    if(req.body.email){
+        var user_with_new_email = await User.findOne({ email: req.body.email})
+        if(user_with_new_email){
+            return res.status(400).send({error: "1 Email is already taken"})
+        }
+    }
+
+    if(req.body.username){
+        var user_with_new_username = await User.findOne({ username: req.body.username})
+        if(user_with_new_username){
+            return res.status(400).send({error: "Username is already taken"})
+        }
+    }
+
+    try {
+        updates.forEach((update) => user[update] = req.body[update])
+        
+        await user.save()
+
+        const updated_user = user.toObject()
+        delete updated_user.tokens
+        delete updated_user.password
+        updated_user.class = updated_user.class.class_name
+
+        delete updated_user.createdAt
+
+        res.send(updated_user)
+
+    } catch (e) {
+        res.status(400).send({error: e.message})
+    }
+})
+
+router.delete('/profile/:username', auth_admin, async (req, res) => {
+    const username = req.params.username
+
+    try {
+        const user = await User.findOneAndDelete({username})
+
+        if (!user) {
+            return res.status(404).send({error: 'Could not find user'})
+        }
+
+        res.send(user)
+
+    } catch (e) {
+        res.status(500).send({error: e.message})
+    }
+})
+
 module.exports = router
